@@ -1,0 +1,96 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              01/24/2022 14:19:49 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.ls
+                    -t) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include<reg52.h>
+   2          
+   3          sbit L2_IN1=P1^2;
+   4          sbit L2_IN2=P1^3;
+   5          sbit L2_IN3=P1^4;
+   6          sbit L2_IN4=P1^5;
+   7          sbit L2_EN1=P1^6;
+   8          sbit L2_EN2=P1^7;
+   9          sbit RED_L=P3^3;      //左边红外传感器
+  10          sbit RED_R=P3^4;      //右边外红传感器
+  11          
+  12          unsigned char pwm_l =0;
+  13          unsigned char push_l =0;   //左电极占空比N/20
+  14          unsigned char pwm_r =0;
+  15          unsigned char push_r =0; 
+  16          unsigned char pwm_t;
+  17          
+  18          void Left()
+  19          {
+  20   1            push_l=12;
+  21   1            push_r=12;
+  22   1            L2_IN1 =1;    //左电机负极 
+  23   1            L2_IN2 =0;    //左电极正极 
+  24   1            L2_IN3 =1;    //右电机正极 
+  25   1            L2_IN4 =0;
+  26   1      }
+  27          void Right()
+  28          {
+  29   1            push_l=12;
+  30   1            push_r=12;
+  31   1            L2_IN1 =0;    //左电机负极 
+  32   1            L2_IN2 =1;    //左电极正极 
+  33   1            L2_IN3 =0;    //右电机正极 
+  34   1            L2_IN4 =1;
+  35   1      }
+  36          void Run()
+  37          {
+  38   1            push_l=12;
+  39   1            push_r=12;
+  40   1            L2_IN1 =0;    //左电机负极 
+  41   1            L2_IN2 =1;    //左电极正极 
+  42   1            L2_IN3 =1;    //右电机正极 
+  43   1            L2_IN4 =0;
+  44   1      }
+  45          void Stop()
+  46          {
+  47   1            push_l=0;
+  48   1            push_r=0;
+  49   1            L2_IN1 =0;    //左电机负极 
+  50   1            L2_IN2 =0;    //左电极正极 
+  51   1            L2_IN3 =0;    //右电机正极 
+  52   1            L2_IN4 =0;
+  53   1      }
+  54          
+C51 COMPILER V9.60.0.0   MAIN                                                              01/24/2022 14:19:49 PAGE 2   
+
+  55          int main()
+  56          {
+  57   1          TMOD |=0x02;
+  58   1          TH0=0XFc;   //1ms定时
+  59   1          TL0=0X18;
+  60   1          TR0=1;
+  61   1          ET0=1;
+  62   1          EA=1; 
+  63   1          while(1)
+  64   1          {
+  65   2            if(RED_R==0 && RED_L==0)  Run();
+  66   2            else if(RED_R==1 && RED_L==0) Right();
+  67   2            else if(RED_R==0 && RED_L==1) Left();
+  68   2            else if(RED_R==1 && RED_L==1) Stop();
+  69   2          }
+  70   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    118    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      5    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

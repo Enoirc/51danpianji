@@ -1,0 +1,3 @@
+".\Objects\main.obj" 
+TO ".\Objects\循迹小车" 
+PRINT(".\Listings\循迹小车.m51") RAMSIZE(256) 
